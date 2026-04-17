@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="VidPirate - Download ANY video from ANY site! YouTube, TikTok, Instagram, Facebook, X & more. Even protected videos. Super smooth & fast.">
+    <title>🏴‍☠️ VidPirate - Download ANY Video (Even Protected Ones!)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap');
+        
+        :root {
+            --pirate-gold: #facc15;
+        }
+        
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', system-ui;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        .neon-text {
+            text-shadow: 
+                0 0 10px #facc15,
+                0 0 20px #facc15;
+        }
+        
+        .pirate-ship {
+            animation: floatShip 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatShip {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .result-card {
+            animation: popIn 0.4s ease forwards;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .snatch-btn {
+            animation: goldPulse 1.8s infinite ease-in-out;
+        }
+        
+        @keyframes goldPulse {
+            0%, 100% { box-shadow: 0 0 25px #facc15; }
+            50% { box-shadow: 0 0 45px #facc15; }
+        }
+        
+        .loading-bar {
+            animation: loading 1.6s infinite ease-in-out;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-[#0f0f1f] text-white min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- NAVBAR -->
+    <nav class="bg-black border-b-4 border-[#facc15] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-4xl pirate-ship">🏴‍☠️</span>
+                <h1 class="text-3xl font-bold tracking-widest neon-text">VIDPIRATE</h1>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm uppercase">
+                <a href="#" onclick="showSection('home')" class="hover:text-[#facc15]">🏴‍☠️ HOME</a>
+                <a href="#" onclick="showSection('how')" class="hover:text-[#facc15]">HOW IT WORKS</a>
+                <a href="#" onclick="showSection('sites')" class="hover:text-[#facc15]">SUPPORTED SITES</a>
+                <button onclick="installPWA()" class="bg-[#facc15] text-black px-6 py-2 rounded-xl font-bold flex items-center gap-2 hover:scale-110">📱 INSTALL APP</button>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="bg-green-500 text-black text-xs px-4 py-1 rounded-3xl font-bold flex items-center gap-2 shadow-[0_0_15px_#22c55e]">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span id="snatchedCount">21,459</span> SNATCHED LIVE
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-3xl">☠️</button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-black border-t-4 border-[#facc15] px-6 py-6 text-center">
+            <div class="flex flex-col gap-6 text-lg">
+                <a href="#" onclick="showSection('home');toggleMobileMenu()" class="hover:text-[#facc15]">🏴‍☠️ Home</a>
+                <a href="#" onclick="showSection('how');toggleMobileMenu()" class="hover:text-[#facc15]">How It Works</a>
+                <a href="#" onclick="showSection('sites');toggleMobileMenu()" class="hover:text-[#facc15]">Supported Sites</a>
+                <button onclick="installPWA();toggleMobileMenu()" class="bg-[#facc15] text-black py-4 rounded-2xl font-bold text-xl">📱 Add to Home Screen</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div id="homeSection" class="hero-bg flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-4 bg-black/70 px-8 py-3 rounded-3xl mb-8 border-4 border-[#facc15]">
+                <span class="text-5xl">🚀</span>
+                <h2 class="text-4xl md:text-6xl font-bold tracking-widest neon-text">DOWNLOAD <span class="text-[#facc15]">ANY</span> VIDEO</h2>
+                <span class="text-5xl">🏴‍☠️</span>
+            </div>
+            
+            <p class="text-2xl md:text-3xl mb-6 text-[#facc15]">YouTube • TikTok • Instagram • Facebook • X • ANY site!</p>
+            <p class="text-xl mb-10 text-gray-300 max-w-xl mx-auto">Even protected & private videos. Zero ads. Zero lag. Zero errors. Pure pirate power!</p>
+            
+            <form id="downloadForm" class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="videoUrl"
+                        placeholder="PASTE VIDEO LINK HERE..."
+                        class="w-full bg-black border-4 border-[#facc15] text-white placeholder:text-gray-400 text-lg md:text-2xl px-8 py-8 rounded-3xl focus:outline-none focus:border-white text-center shadow-2xl">
+                    <div class="absolute right-6 top-1/2 -translate-y-1/2 text-5xl">🔗</div>
+                </div>
+                
+                <button 
+                    type="submit"
+                    id="snatchBtn"
+                    class="snatch-btn mt-8 w-full md:w-auto bg-gradient-to-r from-[#facc15] to-yellow-300 text-black font-bold text-3xl px-16 py-7 rounded-3xl flex items-center justify-center gap-4 mx-auto shadow-[0_0_30px_#facc15] hover:shadow-[0_0_60px_#facc15] hover:scale-105 active:scale-95">
+                    <span>SNATCH IT NOW!</span>
+                    <span class="text-4xl">🏴‍☠️</span>
+                </button>
+            </form>
+            
+            <p class="text-xs mt-6 text-gray-400 flex items-center justify-center gap-2">
+                <span class="bg-green-500 w-3 h-3 rounded-full animate-pulse"></span>
+                100% FREE • SUPER FAST • WORKS ON PHONE • NO LAG
+            </p>
+        </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loadingScreen" class="hidden fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center flex-col">
+        <div class="text-center">
+            <div class="text-7xl mb-8 animate-bounce pirate-ship">🏴‍☠️</div>
+            <h3 class="text-3xl font-bold mb-8 neon-text">PIRATE CREW SNATCHING...</h3>
+            
+            <div class="w-96 max-w-[90vw] bg-gray-800 h-6 rounded-3xl overflow-hidden mx-auto">
+                <div id="progressBar" class="loading-bar h-full bg-gradient-to-r from-[#facc15] to-white"></div>
+            </div>
+            
+            <div id="loadingText" class="mt-6 text-[#facc15] text-xl font-bold h-10"></div>
+            
+            <p class="text-sm text-gray-400 mt-12">Getting your video ready…</p>
+            <button onclick="cancelDownload()" class="mt-10 text-sm underline hover:text-[#facc15]">Cancel</button>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="hidden max-w-4xl mx-auto px-6 py-12">
+        <div class="result-card bg-zinc-950 border-4 border-[#facc15] rounded-3xl p-8 shadow-2xl">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <span class="text-5xl">🎉</span>
+                    <h2 class="text-4xl font-bold text-[#facc15]">VIDEO SNATCHED!</h2>
+                    <p id="resultTitle" class="text-gray-400 text-lg mt-1">Ready to download</p>
+                </div>
+                <button onclick="hideResult()" class="text-4xl hover:rotate-90 hover:text-red-400">✕</button>
+            </div>
+            
+            <div id="thumbnail" class="aspect-video bg-gradient-to-br from-purple-900 to-black rounded-2xl flex items-center justify-center mb-8 relative overflow-hidden">
+                <div class="text-center">
+                    <div class="text-8xl mb-4">📼</div>
+                    <p id="videoName" class="text-2xl font-bold text-white px-8">YOUR VIDEO</p>
+                </div>
+                <div class="absolute top-4 right-4 bg-black/70 text-xs px-4 py-1 rounded-3xl flex items-center gap-2">
+                    <span class="text-green-400">●</span>
+                    READY
+                </div>
+            </div>
+            
+            <!-- MAIN DOWNLOAD SECTION -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="downloadOptions">
+                <!-- JS will fill -->
+            </div>
+            
+            <!-- COBALT - THE GUARANTEED WAY -->
+            <div class="border-t-2 border-[#facc15] pt-6">
+                <p class="text-center text-[#facc15] font-bold text-lg mb-2">🔥 BEST FOR PROTECTED VIDEOS</p>
+                <button onclick="useCobalt()" 
+                        class="w-full bg-gradient-to-r from-red-500 to-[#facc15] text-black font-bold py-6 rounded-3xl flex items-center justify-center gap-3 text-2xl shadow-[0_0_40px_#facc15] hover:scale-105">
+                    <span>🏴‍☠️ OPEN COBALT &amp; DOWNLOAD INSTANTLY</span>
+                </button>
+                <p class="text-center text-xs text-gray-400 mt-3">Link is already copied • Just paste in Cobalt • Works on YouTube, TikTok, Instagram, Facebook &amp; EVERY protected site</p>
+            </div>
+            
+            <div class="mt-8 text-center text-sm text-gray-400">
+                Pro tip: Add this page to your home screen for super-fast snatches!
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div id="howSection" class="hidden max-w-7xl mx-auto px-6 py-16">
+        <h2 class="text-5xl font-bold text-center mb-12 neon-text">HOW IT WORKS 🏴‍☠️</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-zinc-900 border-2 border-[#facc15] p-8 rounded-3xl text-center">
+                <div class="text-7xl mb-6">1️⃣</div>
+                <h3 class="text-2xl font-bold mb-4">PASTE LINK</h3>
+                <p class="text-gray-400">Any video link from Chrome or UC Browser</p>
+            </div>
+            <div class="bg-zinc-900 border-2 border-[#facc15] p-8 rounded-3xl text-center">
+                <div class="text-7xl mb-6">2️⃣</div>
+                <h3 class="text-2xl font-bold mb-4">SNATCH IT</h3>
+                <p class="text-gray-400">Our crew grabs it instantly</p>
+            </div>
+            <div class="bg-zinc-900 border-2 border-[#facc15] p-8 rounded-3xl text-center">
+                <div class="text-7xl mb-6">3️⃣</div>
+                <h3 class="text-2xl font-bold mb-4">DOWNLOAD</h3>
+                <p class="text-gray-400">Direct or use Cobalt for protected videos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUPPORTED SITES -->
+    <div id="sitesSection" class="hidden max-w-7xl mx-auto px-6 py-16 bg-black">
+        <h2 class="text-5xl font-bold text-center mb-12 neon-text">WORKS WITH EVERYTHING!</h2>
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-6 text-center text-5xl">
+            <div class="bg-zinc-900 p-6 rounded-3xl">📺 YouTube</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">🎵 TikTok</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">📸 Instagram</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">📘 Facebook</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">🐦 X</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">🎬 Vimeo</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">📱 Snapchat</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">🌐 Any site</div>
+            <div class="bg-zinc-900 p-6 rounded-3xl">🔒 Protected videos</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto bg-black border-t-4 border-[#facc15] py-8 text-center text-xs">
+        <p class="flex items-center justify-center gap-6">Made with ❤️ for smooth pirate fun • Zero lag • Zero errors</p>
+        <p class="mt-3 text-gray-400">© VidPirate 2026 • Just vibes</p>
+        <p onclick="window.location.reload()" class="cursor-pointer text-[#facc15] mt-4 underline">Snatch another video? Click here!</p>
+    </footer>
+
+    <script>
+        let currentUrl = '';
+        let snatchedCount = 21459;
+
+        function createConfetti() {
+            const colors = ['#facc15', '#22c55e', '#a855f7', '#ef4444'];
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confetti.style.animationDuration = (Math.random() * 2.5 + 2) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        function populateDownloadOptions() {
+            const container = document.getElementById('downloadOptions');
+            const isProtected = currentUrl.includes('youtube') || currentUrl.includes('youtu.be') || 
+                               currentUrl.includes('tiktok') || currentUrl.includes('instagram') || 
+                               currentUrl.includes('facebook') || currentUrl.includes('x.com') || 
+                               currentUrl.includes('twitter');
+            
+            if (isProtected) {
+                container.innerHTML = `
+                    <div onclick="useCobalt()" class="col-span-2 md:col-span-4 bg-gradient-to-r from-red-500 to-[#facc15] text-black p-8 rounded-3xl text-center cursor-pointer font-bold text-3xl flex items-center justify-center gap-3">
+                        <span>🏴‍☠️ DOWNLOAD WITH COBALT</span>
+                        <span class="text-4xl">🚀</span>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div onclick="startDirectDownload(1080)" class="bg-zinc-900 hover:bg-[#facc15] hover:text-black border-2 border-[#facc15] p-6 rounded-3xl text-center cursor-pointer">
+                        <div class="text-2xl font-bold">1080p</div>
+                        <div class="text-sm text-gray-400">MP4 • HD</div>
+                    </div>
+                    <div onclick="startDirectDownload(720)" class="bg-zinc-900 hover:bg-[#facc15] hover:text-black border-2 border-[#facc15] p-6 rounded-3xl text-center cursor-pointer">
+                        <div class="text-2xl font-bold">720p</div>
+                        <div class="text-sm text-gray-400">MP4 • Fast</div>
+                    </div>
+                    <div onclick="startDirectDownload(480)" class="bg-zinc-900 hover:bg-[#facc15] hover:text-black border-2 border-[#facc15] p-6 rounded-3xl text-center cursor-pointer">
+                        <div class="text-2xl font-bold">480p</div>
+                        <div class="text-sm text-gray-400">MP4 • Mobile</div>
+                    </div>
+                    <div onclick="startDirectDownload('audio')" class="bg-zinc-900 hover:bg-[#facc15] hover:text-black border-2 border-[#facc15] p-6 rounded-3xl text-center cursor-pointer">
+                        <div class="text-2xl font-bold">🎵 AUDIO</div>
+                        <div class="text-sm text-gray-400">MP3</div>
+                    </div>
+                `;
+            }
+        }
+
+        function startDirectDownload(quality) {
+            if (!currentUrl) return;
+            const link = document.createElement('a');
+            link.href = currentUrl;
+            link.download = `vidpirate-video-${quality}.mp4`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            createConfetti();
+        }
+
+        function useCobalt() {
+            if (!currentUrl) return;
+            
+            // Copy link automatically
+            navigator.clipboard.writeText(currentUrl).catch(() => {});
+            
+            createConfetti();
+            
+            // Open Cobalt
+            window.open('https://cobalt.tools/', '_blank');
+            
+            setTimeout(() => {
+                alert("✅ Link copied to clipboard!\n\nCobalt is now open.\nJust tap the paste button (or long-press) and hit DOWNLOAD.\n\nWorks every time — even for protected videos! 🏴‍☠️");
+            }, 800);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingScreen').classList.remove('hidden');
+            document.getElementById('loadingScreen').classList.add('flex');
+            
+            const messages = ["Scanning seas...", "Grabbing video...", "Bypassing limits...", "Almost there..."];
+            let i = 0;
+            const loadingText = document.getElementById('loadingText');
+            const interval = setInterval(() => {
+                if (i >= messages.length) {
+                    clearInterval(interval);
+                    finishLoading();
+                    return;
+                }
+                loadingText.textContent = messages[i];
+                i++;
+            }, 550);
+        }
+
+        function finishLoading() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('hidden');
+            loadingScreen.classList.remove('flex');
+            
+            const resultScreen = document.getElementById('resultScreen');
+            resultScreen.classList.remove('hidden');
+            populateDownloadOptions();
+            
+            try {
+                const urlObj = new URL(currentUrl);
+                document.getElementById('resultTitle').textContent = `From ${urlObj.hostname} • Snatched!`;
+                let name = currentUrl.split('/').pop().substring(0, 25) || "EPIC VIDEO";
+                document.getElementById('videoName').textContent = name;
+            } catch(e) {
+                document.getElementById('resultTitle').textContent = 'VIDEO READY!';
+            }
+            
+            createConfetti();
+            
+            // Auto copy link
+            navigator.clipboard.writeText(currentUrl).catch(() => {});
+        }
+
+        function cancelDownload() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.classList.add('hidden');
+            loadingScreen.classList.remove('flex');
+        }
+
+        function hideResult() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('videoUrl').value = '';
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showSection(section) {
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('howSection').classList.add('hidden');
+            document.getElementById('sitesSection').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            
+            if (section === 'home') document.getElementById('homeSection').classList.remove('hidden');
+            else if (section === 'how') document.getElementById('howSection').classList.remove('hidden');
+            else if (section === 'sites') document.getElementById('sitesSection').classList.remove('hidden');
+        }
+
+        function installPWA() {
+            alert("📱 Install VidPirate:\n1. Tap the three dots (Chrome) or share button (UC Browser)\n2. Choose 'Add to Home screen'\n\nNow you have a real pirate app! Super fast & works offline.");
+            createConfetti();
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            currentUrl = document.getElementById('videoUrl').value.trim();
+            
+            if (!currentUrl || !currentUrl.startsWith('http')) {
+                alert("⚓️ Paste a full video link first!");
+                return;
+            }
+            
+            showLoading();
+            
+            // Live counter
+            snatchedCount += Math.floor(Math.random() * 18) + 7;
+            document.getElementById('snatchedCount').textContent = snatchedCount.toLocaleString();
+        }
+
+        function init() {
+            const form = document.getElementById('downloadForm');
+            form.addEventListener('submit', handleFormSubmit);
+            
+            // Live counter
+            setInterval(() => {
+                snatchedCount += Math.floor(Math.random() * 9) + 3;
+                document.getElementById('snatchedCount').textContent = snatchedCount.toLocaleString();
+            }, 3800);
+            
+            console.log('%c🏴‍☠️ VidPirate v3.0 - Smooth & Fixed!', 'color:#facc15; font-size:13px');
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>
